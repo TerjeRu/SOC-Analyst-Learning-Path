@@ -2,7 +2,7 @@
 
 ### A Foundation for Modern Security Platforms
 
-This guide explains the core concepts behind the tools used in a modern Security Operations Center (SOC). Understanding the theory of SIEM (Security Information and Event Management) and SOAR (Security Orchestration, Automation, and Response) will give you a huge advantage in your upcoming training on the Reliaquest GreyMatter platform, as it is built around these principles.
+This guide explains the core concepts behind the tools used in a modern Security Operations Center (SOC). Understanding the theory of SIEM (Security Information and Event Management) and SOAR (Security Orchestration, Automation, and Response) is essential for working with modern security platforms, as most are built around these core principles.
 
 ---
 
@@ -62,4 +62,4 @@ Imagine a user reports a phishing email. Instead of an analyst manually performi
 6.  **Step 5 (Action):** It "zaps" (soft-deletes) all found emails from every user's inbox.
 7.  **Step 6 (Notification):** The SOAR automatically creates a ticket in the case management system with all the information it found and assigns it to an analyst for final review.
 
-Platforms like **Reliaquest GreyMatter** are designed to integrate these SIEM and SOAR capabilities. By understanding these underlying concepts, you'll be able to quickly grasp how the platform works and why each feature exists during your training. Good luck in Dublin!
+Modern security platforms are designed to integrate these SIEM and SOAR capabilities into a single interface. By understanding these underlying concepts, you can quickly grasp how any specific platform works and appreciate why each feature exists. This knowledge provides a solid foundation for mastering any toolset you encounter in a SOC.
