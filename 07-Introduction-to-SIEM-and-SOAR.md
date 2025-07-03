@@ -1,3 +1,8 @@
+---
+layout: default
+title: "07 Introduction to SIEM and SOAR"
+---
+
 # 07-Introduction-to-SIEM-and-SOAR
 
 ### A Foundation for Modern Security Platforms
@@ -12,7 +17,7 @@ This guide explains the core concepts behind the tools used in a modern Security
 
 ### Key Concepts (The Theory)
 
-* **SIEM (Security Information and Event Management):** A SIEM is a system that collects, normalizes, and stores security-related log data from across an entire organization. Think of it as the ultimate library for all your security events.
+- **SIEM (Security Information and Event Management):** A SIEM is a system that collects, normalizes, and stores security-related log data from across an entire organization. Think of it as the ultimate library for all your security events.
 
 The three core jobs of a SIEM are:
 
@@ -30,7 +35,7 @@ The three core jobs of a SIEM are:
 
 ### Key Concepts (The Theory)
 
-* **SOAR (Security Orchestration, Automation, and Response):** If a SIEM is the brain that *finds* the problem, a SOAR is the set of hands that *fixes* the problem. A SOAR platform connects to all your other security tools (like your EDR, firewall, and email system) and allows you to perform actions automatically.
+- **SOAR (Security Orchestration, Automation, and Response):** If a SIEM is the brain that _finds_ the problem, a SOAR is the set of hands that _fixes_ the problem. A SOAR platform connects to all your other security tools (like your EDR, firewall, and email system) and allows you to perform actions automatically.
 
 The three core jobs of a SOAR are:
 
@@ -48,7 +53,7 @@ The three core jobs of a SOAR are:
 
 ### Key Concepts (The Theory)
 
-* **Playbook:** A playbook is a predefined, digital workflow that outlines the exact steps to take in response to a specific type of alert. It's like a recipe or a checklist for handling an incident.
+- **Playbook:** A playbook is a predefined, digital workflow that outlines the exact steps to take in response to a specific type of alert. It's like a recipe or a checklist for handling an incident.
 
 **Example: A Phishing Email Playbook**
 
