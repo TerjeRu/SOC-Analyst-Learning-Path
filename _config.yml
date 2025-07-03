@@ -1,0 +1,8 @@
+# Site settings
+title: A Practical Learning Path for SOC Analysts
+description: >- # this means to ignore newlines until "baseurl:"
+  A series of guides for aspiring cybersecurity and SOC analysts,
+  moving from fundamentals to advanced concepts.
+
+# Theme settings
+theme: jekyll-theme-cayman
