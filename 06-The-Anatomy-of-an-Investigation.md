@@ -1,9 +1,7 @@
 ---
-layout: default
+layout: guide
 title: "06 The Anatomy of an Investigation"
 ---
-
-# 06-The-Anatomy-of-an-Investigation
 
 ### A Framework for Handling Security Alerts
 

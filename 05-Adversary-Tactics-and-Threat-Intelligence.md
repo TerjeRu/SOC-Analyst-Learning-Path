@@ -1,9 +1,7 @@
 ---
-layout: default
+layout: guide
 title: "05 Adversary Tactics and Threat Intelligence"
 ---
-
-# 05-Adversary-Tactics-and-Threat-Intelligence
 
 ### An Introduction to Thinking Like the Enemy
 

@@ -1,9 +1,7 @@
 ---
-layout: default
+layout: guide
 title: "01: Cybersecurity Foundations"
 ---
-
-# 01-Cybersecurity-Foundations
 
 ### An Introduction to Your Digital World
 

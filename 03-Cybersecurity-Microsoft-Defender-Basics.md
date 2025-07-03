@@ -1,9 +1,7 @@
 ---
-layout: default
+layout: guide
 title: "03 Microsoft Defender Basics"
 ---
-
-# 03-Microsoft-Defender-Basics
 
 ### An Introduction to the Security Portal
 

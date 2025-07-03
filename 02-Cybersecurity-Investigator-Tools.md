@@ -1,9 +1,7 @@
 ---
-layout: default
+layout: guide
 title: "02 Cybersecurity Investigator Tools"
 ---
-
-# 02-Cybersecurity-Investigator-Tools
 
 ### An Introduction to Digital Investigation
 

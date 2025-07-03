@@ -1,9 +1,7 @@
 ---
-layout: default
+layout: guide
 title: "07 Introduction to SIEM and SOAR"
 ---
-
-# 07-Introduction-to-SIEM-and-SOAR
 
 ### A Foundation for Modern Security Platforms
 

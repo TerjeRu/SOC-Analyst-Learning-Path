@@ -1,9 +1,7 @@
 ---
-layout: default
+layout: guide
 title: "08 Additional Cybersecurity Resources"
 ---
-
-# 08-Additional-Cybersecurity-Resources
 
 ### A Curated List of Learning and Practice Resources
 

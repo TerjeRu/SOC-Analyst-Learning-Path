@@ -1,9 +1,7 @@
 ---
-layout: default
+layout: guide
 title: "4 Endpoint Investigation Techniques"
 ---
-
-# 04-Endpoint-Investigation-Techniques
 
 ### An Introduction to Live Investigation
 
