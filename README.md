@@ -34,7 +34,7 @@ The guides are numbered and designed to be followed sequentially. Each one build
 
 #### **Part 3: The Toolkit**
 
-- **[08: The Analyst's Toolkit & Resource Guide](./08-The-Analyst's-Toolkit-and-Resource-Guide)**
+- **[08: The Analyst's Toolkit & Resource Guide](./08-Analyst-Toolkit-and-Resource-Guide)**
   - _A curated list of professional-grade tools, practice labs, and learning resources._
 
 ---
