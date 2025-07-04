@@ -1,74 +1,91 @@
 ---
 layout: guide
-title: "05 Adversary Tactics and Threat Intelligence"
+title: "05: Adversary Tactics and Threat Intelligence"
 ---
 
-### An Introduction to Thinking Like the Enemy
+## Part 1: Operationalizing the MITRE ATT&CK® Framework
 
-This guide elevates your perspective from a hands-on tool user to a strategic thinker. You'll learn about the frameworks used to describe and categorize attacker behavior and how to use public threat intelligence to enrich your understanding of a potential threat.
-
----
-
-## Part 1: The MITRE ATT&CK® Framework
-
-**Goal:** To understand the industry-standard language for describing how adversaries operate.
+**Goal:** To move beyond defining ATT&CK and learn to use it as a practical tool for understanding threats and guiding investigations.
 
 ### Key Concepts (The Theory)
 
-- **MITRE ATT&CK®:** This is a globally accessible knowledge base of adversary tactics and techniques based on real-world observations. Think of it as a comprehensive "encyclopedia of bad guy behavior." It is not a tool or a piece of software, but a reference framework used by security professionals worldwide.
-- **Tactics:** These represent the "why" or the technical goal of an attacker. They are the columns across the top of the ATT&CK matrix (e.g., `Initial Access`, `Execution`, `Persistence`, `Exfiltration`).
-- **Techniques:** These represent the "how" an adversary achieves a tactic. Each tactic has multiple techniques listed under it. For example, under the `Initial Access` tactic, one common technique is `Phishing`.
+- **Tactics, Techniques, and Procedures (TTPs):** This is the core of threat intelligence.
+  - **Tactics:** The adversary's high-level goal (e.g., `Initial Access`, `Execution`, `Persistence`).
+  - **Techniques:** _How_ the adversary achieves the goal (e.g., `Phishing`, `Scheduled Task/Job`).
+  - **Sub-techniques:** A more specific description of the technique (e.g., `Phishing: Spearphishing Attachment (T1566.001)`).
+  - **Procedures:** The specific implementation of a technique by an adversary (e.g., using a specific PowerShell command to create a scheduled task that downloads a file).
+- **Threat Groups:** ATT&CK also catalogs known adversary groups (e.g., `APT28`, `FIN7`) and maps the specific TTPs they are known to use. This allows you to move from "someone is using phishing" to "this activity matches the known procedures of APT28."
 
 ### Practical Exercises (Hands-On Labs)
 
-1.  **Explore the ATT&CK Matrix:**
-    - Open the **[MITRE ATT&CK Enterprise Matrix](https://attack.mitre.org/matrices/enterprise/)**.
-    - Take a moment to look it over. The layout can be intimidating at first, but the logic is straightforward. Read the column headers from left to right to see a logical flow that an attack could follow.
-    - Click on the **`Persistence`** tactic column header. This will open a page describing the attacker's goal: to maintain their foothold on a system.
-    - Now go back to the matrix and click on a specific technique under `Persistence`, such as **`Create Account`**. Read the description. You'll see an explanation of how attackers create new accounts on a system to ensure they can get back in later. You'll also see real-world examples of threat groups that use this specific technique.
+1.  **Analyze a Threat Group's Playbook:**
+
+    - Go to the **[MITRE ATT&CK Groups](https://attack.mitre.org/groups/)** page.
+    - Find a well-known group, for example, **APT29** (also known as Cozy Bear). Click on their group page (`G0016`).
+    - Scroll down to the "Techniques Used" table. This is their known playbook.
+    - **Analyst Tip:** Look at their common `Initial Access` techniques. You'll see `Phishing (T1566)`. Now look at their `Command and Control` techniques. You'll see `Ingress Tool Transfer (T1105)`. This tells you a story: APT29 often gets in via phishing and then downloads additional tools to the compromised host. As an analyst, if you see phishing, you should immediately start hunting for signs of tool downloads.
+
+2.  **Map Your Own Detections:**
+    - Think back to the last guide (`04`). We discussed finding persistence via Scheduled Tasks.
+    - Go to the main **[ATT&CK Enterprise Matrix](https://attack.mitre.org/matrices/enterprise/)**.
+    - Find the **Persistence** column (Tactic `TA0003`).
+    - Find the technique **Scheduled Task/Job (T1053)**. Click on it.
+    - Read the description and the "Procedure Examples." You'll see real examples of how threat groups have used this technique. This is how you connect your own findings to the global threat landscape.
 
 ---
 
-## Part 2: The Pyramid of Pain
+## Part 2: The Pyramid of Pain in Practice
 
-**Goal:** To understand why some types of threat indicators are more valuable to a defender than others.
+**Goal:** To understand why some indicators are more valuable than others and how to "move up the pyramid" to create more durable defenses.
 
 ### Key Concepts (The Theory)
 
-- **Indicator of Compromise (IOC):** An IOC is a piece of digital evidence that points to a potential intrusion. An IP address, a domain name, or a file hash are all examples of IOCs.
-- **The Pyramid of Pain:** This is a conceptual model that organizes different types of IOCs into a pyramid. The idea is simple: the higher you go up the pyramid, the more "pain" you cause the adversary when you deny them that indicator. Blocking a simple file hash is easy for them to overcome (they can just change one bit in the file), but forcing them to change their core Tactics, Techniques, and Procedures (TTPs) is very difficult and costly for them.
+- **The Pyramid of Pain:** A model that shows how much "pain" you cause an adversary by denying them certain indicators. Blocking hashes is trivial for them to bypass; forcing them to change their core TTPs is very difficult.
+- **Indicators of Compromise (IOCs) vs. Indicators of Attack (IOAs):**
+  - **IOCs** are the artifacts of an attack (the "what"). They are the bottom of the pyramid: hashes, IPs, domains. They are reactive.
+  - **IOAs** are the behaviors of an attack (the "how"). They are the top of the pyramid: tools and TTPs. Detecting an IOA means you're identifying the adversary's technique, regardless of the specific malware they use. This is proactive.
 
-  - **Trivial (Bottom):** Hash Values, IP Addresses, Domain Names
-  - **Challenging:** Network/Host Artifacts
-  - **Tough (Top):** Tools, TTPs
+### A Practical Scenario: Moving Up the Pyramid
 
-### Practical Exercises (Hands-On Labs)
-
-1.  **A Thought Experiment:**
-    - Imagine you are defending against an attacker. You discover a piece of their malware and block its MD5 hash value in your security tools. The next day, they attack again with a new version of the malware that has a completely different hash. This was easy for them.
-    - Now, imagine you analyze the malware and discover the _technique_ it uses to achieve persistence (e.g., creating a Scheduled Task). You then create a security rule to monitor for _any_ program that uses that specific technique in an unusual way.
-    - Now, to get around your defense, the attacker has to completely redesign their tool. This causes them much more "pain" and is a more durable defense. That is the principle of the Pyramid of Pain in action.
+1.  **Trivial (Hashes):** You detect `malware.exe`. You block its SHA-256 hash. The next day, the attacker re-compiles it, changing the hash, and gets past your block.
+2.  **Easy (IPs):** You see the new malware beaconing to `1.2.3.4`. You block the IP. The attacker spins up a new C2 server at `5.6.7.8`.
+3.  **Simple (Domains):** You notice the malware gets its C2 address by looking up `evil-c2.com`. You block the domain. The attacker registers `new-evil-c2.com`.
+4.  **Annoying (Host Artifacts):** You see the malware always creates a file at `C:\Users\Public\update.dat`. You create a rule to alert on any file creation at that specific path. The attacker now has to change their malware's code to use a different filename.
+5.  **Challenging (Tools):** You realize the attacker is using a modified version of a common hacking tool like Mimikatz. You can create signatures to detect the _tool itself_, forcing the attacker to re-tool or write something custom.
+6.  **Tough (TTPs):** You analyze the malware and see its core behavior is using PowerShell to inject shellcode into the memory of another process (e.g., `explorer.exe`). This is **Process Injection (T1055)**. You create a behavioral rule in your EDR to alert on _any_ instance of PowerShell allocating memory in another process and writing to it. Now, it doesn't matter what malware the attacker uses; if they use that _technique_, you will detect it. This causes the most pain.
 
 ---
 
-## Part 3: Practical Threat Intelligence
+## Part 3: Practical Threat Intelligence Enrichment
 
-**Goal:** To use public threat intelligence platforms to enrich your knowledge about a specific threat indicator.
-
-### Key Concepts (The Theory)
-
-- **Threat Intelligence:** This is contextual information about threats and adversaries that helps organizations protect themselves. It's about moving from a simple alert (e.g., "Connection to IP 1.2.3.4") to an informed assessment ("Connection to IP 1.2.3.4, which is a known command-and-control server for the 'EvilScorpion' malware family").
+**Goal:** To take a single indicator and use various tools to build a complete picture of the threat.
 
 ### Practical Exercises (Hands-On Labs)
 
-1.  **Research a Malicious Indicator:**
+This is a multi-step hunt. Start with one indicator and pivot from there.
 
-    - Let's find a recently reported, live threat indicator. A great source for this is **[ThreatFox by abuse.ch](https://threatfox.abuse.ch/browse/)**. This site lists malware indicators shared by the security community in the last 24 hours.
-    - Open the ThreatFox link. You will see a list of recent IOCs (hashes, IPs, URLs).
-    - Pick an IP address from the list. **Do not browse to it or interact with it in any way.**
+1.  **Get an Initial Indicator:**
 
-2.  **Enrich the Indicator with VirusTotal:**
-    - Copy the malicious IP address you chose.
-    - Go to **[VirusTotal](https://www.virustotal.com/)**, click on the **Search** tab (it can search for IPs, domains, hashes, etc.).
-    - Paste the IP address and press Enter.
-    - Look at the results. You will see not only how many vendors flag it as malicious, but you can also click on the **Community** tab. In the community section, you will often find comments from other security researchers providing context, such as what malware family the IP is associated with or what phishing campaign it belongs to. This process of taking one piece of data and learning more about it from other sources is called "enrichment," and it is a fundamental task for a SOC analyst.
+    - Go to **[ThreatFox by abuse.ch](https://threatfox.abuse.ch/browse/)**. Find a recent malware sample and copy its **SHA-256 hash**.
+
+2.  **Enrich with VirusTotal:**
+
+    - Go to **[VirusTotal](https://www.virustotal.com/)** and search for the hash.
+    - **Analyst Tip:** Look at the **"Details"** tab for file names it has been seen with. Look at the **"Behavior"** tab to see what network connections it made in a sandbox environment. Look at the **"Community"** tab for comments. These tabs often contain more value than the main detection ratio.
+
+3.  **Pivot to Network Indicators:**
+
+    - From the VirusTotal "Behavior" or "Details" tab, you will likely find an **IP address** or **Domain Name** the malware communicated with. Copy one.
+
+4.  **Enrich the Network Indicator (Command Line):**
+    - Now, use the tools on your Mac or Kali VM to dig deeper into the domain (e.g., `evil-c2.com`).
+    - **`dig`:** Get all DNS records for the domain. The `ANY` flag asks for all record types.
+      ```bash
+      dig evil-c2.com ANY
+      ```
+    - **`whois`:** Find out who registered the domain.
+      - `whois`: The command to perform a WHOIS lookup.
+      ```bash
+      whois evil-c2.com
+      ```
+    - **Analyst Tip:** In the `whois` output, look at the "Creation Date". Was the domain registered yesterday? This is a huge red flag. Also look at the "Registrar" and "Registrant Email". You can sometimes pivot on this information to find other malicious domains registered by the same person or organization. This is a core OSINT technique.
