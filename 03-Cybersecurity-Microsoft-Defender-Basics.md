@@ -1,50 +1,70 @@
 ---
 layout: guide
-title: "03 Microsoft Defender Basics"
+title: "03: Identity and Email Threat Analysis"
 ---
 
-### An Introduction to the Security Portal
+## Part 1: Identity Threat Detection
 
-This guide introduces you to a common tool used by security teams: the Microsoft Defender portal. We'll cover the core concepts of user risk and how to find and remove malicious emails from your organization, moving from theory to the practical tools that defenders use every day.
-
----
-
-## Part 1: Understanding At-Risk Users
-
-**Goal:** To understand what "user risk" means in Microsoft Defender and why a user might be flagged as "High" risk.
+**Goal:** To understand how modern security platforms detect compromised user accounts by analyzing behavioral signals, a core component of any Identity and Access Management (IAM) security program.
 
 ### Key Concepts (The Theory)
 
-- **User Risk Level:** This is a rating (Low, Medium, or High) that Microsoft Defender assigns to a user account based on its activity. It's a calculated probability that the account has been compromised. In many organizations, security teams have policies that automatically trigger actions when a user's risk hits "High," such as forcing a password reset or blocking their sign-in.
-- **Identity Protection:** This is the specific feature within Microsoft Defender that detects and reports on risky user activity. It gathers signals from countless sources to spot behavior that deviates from a user's normal patterns.
+- **Identity as a Security Boundary:** In a cloud-first world, a user's identity (their username and password/credentials) is the new perimeter. Protecting it is paramount.
+- **Risk Detections:** Security platforms don't just wait for a password to be proven bad. They continuously analyze user activity and generate "risk detections" based on suspicious signals. These are indicators that an account may be compromised.
+- **Common High-Risk Signals:**
+  - **Leaked Credentials:** The platform's threat intelligence detects that the user's corporate credentials have been found on the dark web or in a public data breach dump. This immediately flags the account because the password is known to be compromised. This is a primary enabler for the **Valid Accounts (T1078)** technique.
+  - **Impossible Travel:** A user logs in from Spain, and five minutes later, a login for the same account occurs from Russia. This is physically impossible, indicating one of the logins is fraudulent. This is a classic detection for **Valid Accounts: Stolen Credentials**.
+  - **Anonymous IP Address:** The login originates from an anonymizer service like Tor or a known malicious VPN exit node. Attackers use these to hide their true location (**Proxy: T1090.003**).
+  - **Malicious IP Address:** The login comes from an IP address with a bad reputation, such as a known botnet command-and-control (C2) server.
 
-### Why Does a User's Risk Level Rise?
+### Practical Application (The Hunt)
 
-A user's risk level can increase for many reasons. While security teams typically only react to "High" risk alerts to avoid fatigue from false positives, understanding the triggers is key. Common reasons for a high-risk alert include:
+- **The Security Portal:** In a tool like Microsoft Defender for Identity, these risk detections are aggregated into a "User Risk Level" (Low, Medium, High). An automated policy might trigger on "High" risk, forcing an immediate password reset or blocking the account (**Mitigation: M1035**).
+- **Investigating a Risky User:**
 
-- **Leaked Credentials:** Defender's threat intelligence constantly scans the dark web and other sources. If a user's corporate email and password are found in a public data breach (e.g., from a breach at another website where they used the same password), their risk level will immediately be elevated.
-- **Sign-in from an Anonymous IP Address:** If a user signs in using an anonymizer service like a Tor browser or a known anonymous VPN, it is considered high-risk because this is a common tactic for attackers to hide their location.
-- **Impossible Travel:** This is a classic indicator of compromise. If a user logs in from Spain and then, five minutes later, logs in from a location in Russia, this is physically impossible. Defender flags this activity, assuming one of the logins must be fraudulent.
-- **Sign-in from a Malicious IP Address:** If a sign-in attempt comes from an IP address that is known to be used by attackers (e.g., a server associated with a botnet), the risk level will be raised.
+  1.  An alert fires for "High User Risk" for `ciso@yourcompany.com`.
+  2.  You open the user's profile in the portal. You see three recent risk detections: `Leaked Credentials`, `Login from unfamiliar location`, and `Anomalous token`.
+  3.  The `Anomalous token` detection is most critical, as it might indicate a stolen session cookie.
+  4.  **Action:** You would trigger a "Confirm User Compromised" action in the portal. This forces a logout on all active sessions, requires the user to perform MFA, and forces a password reset, effectively locking the attacker out.
+
+- **Analyst Tip:** The "Impossible Travel" alert is high-fidelity, but always consider legitimate exceptions. A user might log in from their desktop in the office and then immediately have their phone's email client check in from a different location via a mobile network. Context is key. Always check the device type and application associated with the logins.
 
 ---
 
-## Part 2: Hunting and Removing Malicious Emails
+## Part 2: Threat Hunting: Email Analysis
 
-**Goal:** To understand how security analysts find and remove harmful emails from user inboxes across an entire organization.
+**Goal:** To understand the process and tools used to hunt for and remove malicious emails across an entire organization.
 
 ### Key Concepts (The Theory)
 
-- **Threat Explorer (or Explorer):** This is a powerful search tool within the Defender portal. It allows an analyst with the right permissions to search all email traffic across the entire company for specific threats. You can hunt for emails by sender, subject line, attachment name, and dozens of other indicators.
-- **Zero-Hour Auto Purge (ZAP):** ZAP is a feature in Defender for Office 365 that can automatically remove malicious emails _after_ they have been delivered. Sometimes, an email seems safe at first but is later identified as phishing or malware. ZAP goes back into user inboxes and "zaps" (quarantines or deletes) the email, even if the user has already read it.
-- **Manual Remediation:** While ZAP is automatic, analysts often perform manual "zaps." If a new phishing campaign is discovered, an analyst uses Threat Explorer to find all emails related to that campaign and then triggers an action to pull them from all user inboxes at once.
+- **Email Security Gateway (ESG):** A tool that filters incoming and outgoing email for spam, phishing, and malware before it reaches the user's mailbox.
+- **Threat Hunting Query Interface:** Most modern security platforms (EDR, SIEM, ESG) provide a powerful interface to search through massive datasets of security events. In the Microsoft ecosystem, this is often called "Advanced Hunting" and uses the Kusto Query Language (KQL).
+- **Remediation Actions:** When a malicious email is found, an analyst can take several actions:
+  - **Soft Delete:** Moves the email to the user's "Recoverable Items" folder. This gets it out of the inbox but allows for easy recovery if it was a false positive. This is the most common action.
+  - **Hard Delete:** Permanently deletes the email. Used when you are 100% certain it's malicious.
+  - **Block Sender/Domain:** Adds the sender or their domain to a blocklist to prevent future emails.
 
-### The Process of "Hunting and Zapping"
+### Practical Application (The Hunt)
 
-Here’s a simplified version of how an analyst would handle a reported phishing email.
+1.  **The Indicator:** A user reports a suspicious email with the subject "Urgent Action Required on Your Account." This subject line becomes your initial indicator.
+2.  **The Hunt with KQL:** You go to the Advanced Hunting portal in Microsoft Defender. You need to search all email events for that subject line.
+    - `EmailEvents`: This is the table containing all metadata about processed emails.
+    - `| where Subject contains "Urgent Action"`: This is the filter. `contains` is a case-insensitive search for the substring.
+    - `| project Timestamp, SenderFromAddress, RecipientEmailAddress, Subject`: This selects the specific columns you want to see in the results.
+    ```kql
+    EmailEvents
+    | where Subject contains "Urgent Action"
+    | project Timestamp, SenderFromAddress, RecipientEmailAddress, Subject
+    ```
+3.  **Review and Remediate:** The query returns a list of 25 users who received the email. You review the sender address and other details to confirm they are all part of the same phishing campaign (**Phishing: T1566**). You select all 25 emails in the results and trigger a "Soft Delete" remediation action.
+4.  **Investigate Further:** The hunt isn't over. The next step is to investigate if anyone _clicked_ the link in the email. You would pivot to a new query.
 
-1.  **Get an Indicator:** The process starts with a clue. A user might report a suspicious email, or an automated alert might flag a new threat. The analyst identifies key features, like the email's subject line or the sender's address.
-2.  **Hunt in Threat Explorer:** The analyst goes to **Threat Explorer** in the Defender portal. They use the unique details from the suspicious email to create a search query. For example, they might search for all emails received in the last 24 hours with the subject "Urgent Action Required on Your Account."
-3.  **Review the Results:** Explorer returns a list of every user who received that email. The analyst can review the emails to confirm they are all part of the same malicious campaign and are not legitimate communications.
-4.  **Remediate (The "Zap"):** Once confirmed, the analyst selects all the malicious emails in the results and chooses an action. The most common action is a **"Soft delete,"** which moves the emails to the users' Recoverable Items folder (like a second-stage recycle bin). This removes the immediate threat from the inbox but allows for recovery if a mistake was made.
-5.  **Investigate Further:** After removing the threat, the analyst would investigate who might have clicked the malicious link or opened the attachment to determine if any accounts were compromised or if any computers were infected.
+    - **Analyst Tip:** A more advanced KQL query could join email events with device events to find users who both received the email _and_ had a network connection to the malicious domain shortly after. This is the power of a correlated data platform.
+
+    ```kql
+    EmailEvents
+    | where Subject contains "Urgent Action"
+    // In a real query, you'd extract the URL and join with DeviceNetworkEvents
+    // This is a conceptual example of the next step.
+
+    ```

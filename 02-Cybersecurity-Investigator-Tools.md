@@ -1,98 +1,112 @@
 ---
 layout: guide
-title: "02 Cybersecurity Investigator Tools"
+title: "02: Core Investigator Tools"
 ---
 
-### An Introduction to Digital Investigation
+## Part 1: Network Traffic Analysis
 
-This guide builds on the foundations from the first session, moving you from understanding concepts to actively investigating digital activity. You'll learn to use standard, free tools to analyze network traffic, inspect websites, and examine potentially suspicious files.
-
----
-
-## Part 1: Intercepting Network Traffic
-
-**Goal:** To capture and analyze your own network traffic, seeing the raw data behind your internet activity.
+**Goal:** To move beyond `netstat` and learn how to capture and inspect the raw data of your network traffic, a fundamental skill for detecting threats that don't leave traces on disk.
 
 ### Key Concepts (The Theory)
 
-- **Packet Capture (PCAP):** This is the act of recording all the data packets that cross a network interface, much like wiretapping your own internet connection. The file containing this data is often called a PCAP file.
-- **Wireshark:** The world's most popular network protocol analyzer. It's a free, industry-standard tool that lets you view the contents of a PCAP file in a human-readable format.
-- **The Three-Way Handshake:** TCP connections, used for most web traffic, begin with a three-step process: SYN (synchronize), SYN-ACK (synchronize-acknowledge), and ACK (acknowledge). Seeing this pattern confirms a stable connection was established.
-- **HTTP vs. HTTPS:** With HTTP, your Browse traffic is in plain text. With HTTPS, that traffic is encrypted. In Wireshark, you can read the contents of HTTP traffic, but HTTPS data will appear as scrambled, unreadable text.
+- **Packet Capture (PCAP):** The act of recording all data packets crossing a network interface. This is analogous to wiretapping your own connection and is essential for deep forensic analysis. This falls under the **Collection (TA0009)** tactic in MITRE ATT&CK.
+- **Wireshark:** The industry-standard GUI tool for analyzing PCAP files. It decodes hundreds of protocols and allows for powerful filtering and analysis.
+- **tcpdump:** The command-line equivalent of Wireshark. It is lightweight, powerful, and available on virtually every Linux, BSD, and macOS system. It's the go-to tool for capturing traffic on servers or remote systems.
+- **Berkeley Packet Filter (BPF) Syntax:** The filtering language used by `tcpdump` and other tools. It allows you to specify exactly what traffic you want to capture (e.g., `host 1.1.1.1 and port 443`).
 
 ### Practical Exercises (Hands-On Labs)
 
-1.  **Install Wireshark**
+1.  **Capture Traffic with `tcpdump` (Mac/Linux)**
 
-    - Download and install **[Wireshark](https://www.wireshark.org/download.html)**. Accept the default installation options. On Windows, this will also install `Npcap`; this is required and safe.
+    - Open your Terminal. The following command captures traffic and writes it to a file.
+      - `sudo`: Required to access network interfaces.
+      - `-i en0`: Specifies the interface to listen on (e.g., `en0` for Wi-Fi on Mac, `eth0` for wired on Linux). Use `ifconfig` or `ip addr` to find yours.
+      - `-w capture.pcap`: Writes the output to a file named `capture.pcap`.
+    - Run the command, then browse a few websites, then stop it with `Ctrl+C`.
+      ```bash
+      sudo tcpdump -i en0 -w capture.pcap
+      ```
 
-2.  **Capture Your Network Traffic**
-
-    - Open Wireshark. You will see a list of network interfaces.
-    - Double-click on the interface that shows activity (a moving sparkline). This is your active connection, and the capture will begin immediately.
-    - Open your web browser and visit **[http://neverssl.com](http://neverssl.com)** (this site intentionally uses HTTP so you can see unencrypted traffic).
-    - Go back to Wireshark and click the red "Stop" button in the toolbar.
-
-3.  **Analyze the Capture**
-    - In the "Apply a display filter" bar at the top, type `http` and press Enter. This filters the capture to show only HTTP traffic.
-    - Look for a packet in the "Info" column that says `GET /`. This is your browser's request to get the main webpage.
-    - Right-click on that `GET` packet and choose **Follow > TCP Stream**. A new window will pop up showing you the raw HTML of the website you visited. You are reading the actual data that was sent to your browser.
+2.  **Analyze the Capture with Wireshark**
+    - Install **[Wireshark](https://www.wireshark.org/download.html)** on your Mac or Windows machine.
+    - Open the `capture.pcap` file you created.
+    - In the "Apply a display filter" bar, type `http` and press Enter. This shows only unencrypted web traffic. Find a `GET` request, right-click, and choose **Follow > TCP Stream** to reassemble and view the conversation.
+    - **Analyst Tip:** Learn a few key Wireshark filters. `dns.qry.name contains "badsite"` helps you hunt for requests to a specific domain. `ip.addr == 8.8.8.8` shows all traffic to and from a specific IP. `tcp.flags.syn == 1 and tcp.flags.ack == 0` will show you only the initial SYN packets of TCP handshakes, useful for spotting network scanning.
 
 ---
 
-## Part 2: Inspecting Web Activity
+## Part 2: Web and URL Analysis
 
-**Goal:** To analyze the components of a website and examine online threats using web-based tools.
+**Goal:** To learn how to safely dissect websites and URLs to identify phishing and drive-by-download threats.
 
 ### Key Concepts (The Theory)
 
-- **Browser Developer Tools:** Every modern browser has built-in tools that are incredibly useful for security analysis. The "Network" tab shows every request a webpage makes, and the "Inspector" or "Elements" tab shows the page's source code.
-- **URL Analysis:** Not all links are what they seem. A key skill is dissecting a URL to spot suspicious parts, like strange subdomains (`secure.paypal.com.evilsite.net`) or attempts to hide the true file type (`document.pdf.exe`).
-- **Online Sandboxing:** A sandbox is a secure, isolated environment where you can safely open a suspicious link or file to see what it does without infecting your own computer. Services like VirusTotal are critical tools for analysts.
+- **Browser Developer Tools:** Built-in tools (usually F12) that are essential for analysis. The "Network" tab shows every request a page makes, the "Console" shows errors, and "Application" shows cookies and storage.
+- **URL Analysis:** The skill of dissecting a URL to spot deception. Attackers use subdomains, URL shorteners, and file extensions to trick users.
+- **Online Sandboxing:** Using a secure, remote service to analyze a suspicious file or URL. This prevents you from infecting your own machine.
 
 ### Practical Exercises (Hands-On Labs)
 
 1.  **Inspect a Website with Developer Tools**
 
-    - Go to any news website.
-    - Right-click anywhere on the page and select **Inspect**.
-    - Click on the **Network** tab in the developer tools panel.
-    - Refresh the webpage. Watch as the Network tab populates with dozens or even hundreds of requests, showing you how a single webpage is actually composed of many different files and requests to other servers.
+    - Go to a major news website. Open Developer Tools (F12 or `Cmd+Opt+I`) and click the **Network** tab.
+    - Refresh the page and watch the requests fly by. Sort by "Domain" to see how many third-party trackers and ad networks are being contacted.
+    - **Analyst Tip:** Click on the "Console" tab. Errors here can sometimes indicate broken scripts or failed connections that might be of interest. In the "Application" tab, look at "Cookies" to see how the site is tracking your session.
 
-2.  **Analyze a Suspicious Link with VirusTotal**
-    - **[VirusTotal](https://www.virustotal.com)** is a free service that analyzes files and URLs with dozens of different antivirus engines.
-    - Find a suspicious link. You can go back to **[PhishTank](https://phishtank.org/)** to find one. **Right-click** on a link from the list and **Copy Link Address**. **DO NOT VISIT THE SITE.**
-    - On the VirusTotal website, click the **URL** tab, paste the suspicious link, and press Enter.
-    - Examine the results to see how many different security vendors flagged the link as malicious.
+2.  **Analyze a URL from the Command Line (Mac/Linux)**
+
+    - `curl` is a powerful tool for interacting with URLs without a browser.
+    - Use the `-I` flag to fetch only the HTTP headers of a site. This shows you the server type, redirects, and cookies without rendering any content.
+      ```bash
+      curl -I [https://www.google.com](https://www.google.com)
+      ```
+    - **Analyst Tip:** Use `curl -L` to follow redirects. A site might use multiple redirects to hide its final malicious destination. `curl -I -L <suspicious_url>` will show you the entire redirect chain.
+
+3.  **Use an Online Sandbox**
+    - Go to **[VirusTotal](https://www.virustotal.com/)**.
+    - Find a suspicious link from a site like **[PhishTank](https://phishtank.org/)**.
+    - On VirusTotal, use the **URL** tab to paste the link and see the results.
+    - **Analyst Tip:** Don't just look at the "Detection" score. Click on the **"Details"** tab to see the final URL after redirects and the **"Community"** tab to see if other researchers have left comments about the threat. This is a core part of the "enrichment" process. This entire process is a key part of investigating **Phishing (T1566)**.
 
 ---
 
-## Part 3: Examining Logs and Endpoints
+## Part 3: Basic Log Analysis
 
-**Goal:** To understand the basics of log analysis and the principles of endpoint detection.
+**Goal:** To learn where to find the most critical logs on different operating systems and how to begin filtering them.
 
 ### Key Concepts (The Theory)
 
-- **Log Files:** Every operating system and application generates logs, which are timestamped records of events (e.g., a user logging in, a program starting). For an analyst, logs provide the digital breadcrumbs needed to trace an attacker's steps.
-- **Correlation:** The real power of log analysis comes from _correlating_ events across different log sources. Seeing a firewall block a connection from a known bad IP at the same time a user's machine tries to connect to that IP is a strong indicator of compromise.
+- **Log Files:** Timestamped records of events. For an analyst, logs are the digital breadcrumbs needed to reconstruct an attacker's actions.
+- **Correlation:** The real power of log analysis comes from correlating events across different sources. Seeing a firewall block an IP at the same time an EDR tool sees a process trying to contact that IP is a strong indicator of compromise.
 
 ### Practical Exercises (Hands-On Labs)
 
-1.  **Explore Local System Logs**
+1.  **Explore System Logs**
 
     - **On Windows:**
 
-      1.  Open the **Event Viewer** app.
-      2.  In the left pane, expand **Windows Logs** and click on **System** or **Security**.
-      3.  Browse the events. Note the sheer volume of logged activity. You can use the "Filter Current Log..." action on the right to search for specific events, which is a core task for a Windows administrator or analyst.
+      - Open **Event Viewer**. The three most important logs are:
+        - **Security:** Contains logon events, account management, etc. (requires admin rights).
+        - **System:** Contains events logged by system components.
+        - **Application:** Contains events logged by software.
+      - **Analyst Tip:** In the Security log, filter for Event ID `4624` (Successful Logon) and `4625` (Failed Logon). A storm of 4625s followed by a 4624 from the same IP is a classic sign of a successful **Brute Force (T1110)** attack.
 
-    - **On Mac:**
-      1.  Open the **Console** app (use Spotlight search with `Cmd + Space`).
-      2.  The Console app provides a real-time stream of your system's log files.
-      3.  Use the search bar at the top to filter the messages for a specific process (e.g., `kernel`). This demonstrates the first step of log analysis: filtering noise to find specific events.
+    - **On your Mac:**
 
-2.  **Think Like a Log Analyst (A Thought Experiment)**
-    - **Scenario:** You are reviewing web server logs. You see a series of 50 failed login attempts for the "admin" account from a single IP address. This is immediately followed by one successful "admin" login from that same IP.
-    - **Your thought process:**
-      - **What it is:** This pattern strongly suggests a **Brute Force Attack**, where an attacker used automation to guess a password repeatedly.
-      - **Next Step:** The immediate priority is containment. You would lock the compromised "admin" account and block the attacker's IP address at the firewall. Afterward, the deeper investigation would begin to determine what the attacker did after gaining access.
+      - The `log` command is the modern way to query the Unified Log system.
+      - This command shows all log entries from the `sshd` process in the last hour.
+        - `show`: The action to perform.
+        - `--predicate`: The filter to apply.
+        - `--last`: The time window.
+
+      ```bash
+      log show --predicate 'process == "sshd"' --last 1h
+      ```
+
+    - **On your Linux VM (Kali/Arch):**
+      - Key logs are in `/var/log/`. `auth.log` (Debian/Ubuntu) or `secure` (CentOS/RHEL) tracks authentication. `syslog` is a general-purpose log.
+      - Use `grep` to filter these files for keywords like "failed" or "session opened".
+      ```bash
+      grep -i "failed password" /var/log/auth.log
+
+      ```
