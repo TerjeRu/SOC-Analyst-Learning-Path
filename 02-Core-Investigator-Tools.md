@@ -104,8 +104,10 @@ title: "02: Core Investigator Tools"
       ```
 
     - **On your Linux VM (Kali/Arch):**
+
       - Key logs are in `/var/log/`. `auth.log` (Debian/Ubuntu) or `secure` (CentOS/RHEL) tracks authentication. `syslog` is a general-purpose log.
       - Use `grep` to filter these files for keywords like "failed" or "session opened".
+
       ```bash
       grep -i "failed password" /var/log/auth.log
 
