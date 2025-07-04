@@ -16,7 +16,7 @@ The guides are numbered and designed to be followed sequentially. Each one build
 
 - **[01: Cybersecurity Foundations](./01-Cybersecurity-Foundations)**
   - _Core networking principles, threat categorization, and the defender's mindset._
-- **[02: Core Investigator Tools](./02-Cybersecurity-Investigator-Tools)**
+- **[02: Core Investigator Tools](./02-Core-Investigator-Tools)**
   - _Hands-on with `tcpdump`, Wireshark, `curl`, and other essential analysis tools._
 - **[03: Identity and Email Threat Analysis](./03-Identity-and-Email-Threat-Analysis)**
   - _Principles of identity protection and hunting for email-based threats using KQL._
@@ -29,7 +29,7 @@ The guides are numbered and designed to be followed sequentially. Each one build
   - _Operationalizing the MITRE ATT&CK framework and using OSINT for threat enrichment._
 - **[06: The Anatomy of an Investigation](./06-The-Anatomy-of-an-Investigation)**
   - _Using the PICERL framework to manage an incident from initial alert to final ticket._
-- **[07: SIEM and SOAR Concepts](./07-Introduction-to-SIEM-and-SOAR)**
+- **[07: SIEM and SOAR Concepts](./07-SIEM-and-SOAR-Concepts)**
   - _Understanding the architecture of modern SOC platforms and security automation._
 
 #### **Part 3: The Toolkit**
