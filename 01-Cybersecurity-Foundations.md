@@ -1,5 +1,3 @@
-
-
 ## Part 1: Network Analysis Fundamentals
 
 **Goal:** To understand how to identify a system's network identity and inspect its communications, a core task in any investigation.

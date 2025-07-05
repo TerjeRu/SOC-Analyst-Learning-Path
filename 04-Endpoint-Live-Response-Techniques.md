@@ -1,8 +1,3 @@
----
-layout: guide
-title: "04: Endpoint Live Response Techniques"
----
-
 ## Part 1: Process and Service Analysis
 
 **Goal:** To move beyond simply listing processes and learn to analyze their relationships and behaviors to spot anomalies. This is the core of endpoint investigation.

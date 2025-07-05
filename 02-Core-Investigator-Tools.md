@@ -1,8 +1,3 @@
----
-layout: guide
-title: "02: Core Investigator Tools"
----
-
 ## Part 1: Network Traffic Analysis
 
 **Goal:** To move beyond `netstat` and learn how to capture and inspect the raw data of your network traffic, a fundamental skill for detecting threats that don't leave traces on disk.

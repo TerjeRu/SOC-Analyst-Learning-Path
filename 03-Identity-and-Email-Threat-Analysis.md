@@ -1,8 +1,3 @@
----
-layout: guide
-title: "03: Identity and Email Threat Analysis"
----
-
 ## Part 1: Identity Threat Detection
 
 **Goal:** To understand how modern security platforms detect compromised user accounts by analyzing behavioral signals, a core component of any Identity and Access Management (IAM) security program.

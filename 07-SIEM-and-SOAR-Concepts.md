@@ -1,8 +1,3 @@
----
-layout: guide
-title: "07: SIEM and SOAR Concepts"
----
-
 ## Part 1: SIEM - The Brain of the SOC
 
 **Goal:** To understand the core function of a SIEM as the central nervous system for all security data, enabling detection and investigation at scale.

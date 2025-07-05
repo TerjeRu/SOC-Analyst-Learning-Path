@@ -1,9 +1,4 @@
----
-layout: guide
-title: "06: The Anatomy of an Investigation"
----
-
-## Part 1: The First 5 Minutes: Triage and Prioritization
+# Part 1: The First 5 Minutes: Triage and Prioritization
 
 **Goal:** To learn how to perform "triage" on a new alert to quickly determine if it's a real fire, a false alarm, or something in between.
 

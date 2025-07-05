@@ -1,8 +1,3 @@
----
-layout: guide
-title: "08: Analyst Toolkit & Resource Guide"
----
-
 ### A Curated List for Continuous Learning
 
 This guide is a living document of high-quality, professional resources. The world of cybersecurity moves fast; continuous learning isn't just recommended, it's required. This list avoids beginner-level content and focuses on the tools and knowledge bases used by professional analysts.

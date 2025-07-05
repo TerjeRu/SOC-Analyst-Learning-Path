@@ -1,8 +1,3 @@
----
-layout: guide
-title: "05: Adversary Tactics and Threat Intelligence"
----
-
 ## Part 1: Operationalizing the MITRE ATT&CK® Framework
 
 **Goal:** To move beyond defining ATT&CK and learn to use it as a practical tool for understanding threats and guiding investigations.
