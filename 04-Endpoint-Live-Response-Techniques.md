@@ -1,6 +1,8 @@
 ---
+layout: default
 title: "04: Endpoint Live Response Techniques"
 nav_order: 5
+permalink: /endpoint-live-response-techniques/
 ---
 
 ## Part 1: Process and Service Analysis

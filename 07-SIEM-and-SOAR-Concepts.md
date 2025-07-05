@@ -1,6 +1,8 @@
 ---
+layout: default
 title: "07: SIEM and SOAR Concepts"
 nav_order: 8
+permalink: /siem-soar-concepts/
 ---
 
 ## Part 1: SIEM - The Brain of the SOC

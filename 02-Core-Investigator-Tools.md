@@ -1,6 +1,8 @@
 ---
+layout: default
 title: "02: Core Investigator Tools"
 nav_order: 3
+permalink: /core-investigator-tools/
 ---
 
 ## Part 1: Network Traffic Analysis

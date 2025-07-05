@@ -11,3 +11,27 @@ baseurl: "/SOC-Analyst-Learning-Path"
 
 # Enable search
 search_enabled: true
+
+# Just the Docs theme specific settings
+aux_links:
+  "SOC Analyst Learning Path on GitHub":
+    - "https://github.com/TerjeRu/SOC-Analyst-Learning-Path"
+
+# Back to top link
+back_to_top: true
+back_to_top_text: "Back to top"
+
+# Footer content
+footer_content: "This project is licensed under the MIT License."
+
+# Color scheme (optional)
+color_scheme: nil
+
+# Google Analytics (optional)
+# ga_tracking: UA-XXXXXXXX-X
+
+# Plugins (GitHub Pages supported)
+plugins:
+  - jekyll-feed
+  - jekyll-sitemap
+  - jekyll-seo-tag
