@@ -1,7 +1,4 @@
----
-layout: guide
-title: "01: Cybersecurity Foundations"
----
+
 
 ## Part 1: Network Analysis Fundamentals
 
