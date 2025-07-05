@@ -65,7 +65,7 @@ Staying current is critical. These are professional-grade sources, not just head
   - **[Red Canary Blog](https://redcanary.com/blog/)**
 - **Curated Newsletters:** Let others do the filtering for you.
   - **[SANS NewsBites](https://www.sans.org/newsletters/newsbites/)**: A semi-weekly summary of the most important headlines.
-  - **[Risky Business](https://risky.biz/)**: A weekly podcast and newsletter that provides sharp, insightful analysis of the week's security news. Highly respected in the industry.
+  - **[Risky Business](https://risky.biz/)**: A weekly podcast and newsletter that provides sharp, insightful analysis of the week's security news.
 
 ---
 
