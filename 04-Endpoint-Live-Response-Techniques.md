@@ -1,6 +1,6 @@
 ---
-layout: guide
 title: "04: Endpoint Live Response Techniques"
+nav_order: 5
 ---
 
 ## Part 1: Process and Service Analysis

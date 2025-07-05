@@ -1,6 +1,6 @@
 ---
-layout: guide
 title: "02: Core Investigator Tools"
+nav_order: 3
 ---
 
 ## Part 1: Network Traffic Analysis

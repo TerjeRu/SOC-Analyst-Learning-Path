@@ -1,8 +1,13 @@
-# Site settings
-title: A Practical Learning Path for SOC Analysts
-description: >- # this means to ignore newlines until "baseurl:"
-  A series of guides for aspiring cybersecurity and SOC analysts,
-  moving from fundamentals to advanced concepts.
+# The theme to use
+remote_theme: just-the-docs/just-the-docs
 
-# Theme settings
-theme: jekyll-theme-cayman
+# The title and description of your site
+title: A Practical Learning Path for SOC Analysts
+description: A series of guides for aspiring cybersecurity and SOC analysts.
+
+# The URL and baseurl for your site, critical for GitHub Pages
+url: "https://terjeru.github.io"
+baseurl: "/SOC-Analyst-Learning-Path"
+
+# Enable search
+search_enabled: true

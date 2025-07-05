@@ -1,6 +1,6 @@
 ---
-layout: guide
 title: "03: Identity and Email Threat Analysis"
+nav_order: 4
 ---
 
 ## Part 1: Identity Threat Detection

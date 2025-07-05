@@ -1,6 +1,6 @@
 ---
-layout: guide
 title: "07: SIEM and SOAR Concepts"
+nav_order: 8
 ---
 
 ## Part 1: SIEM - The Brain of the SOC

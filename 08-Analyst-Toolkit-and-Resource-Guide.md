@@ -1,6 +1,6 @@
 ---
-layout: guide
-title: "08: Analyst Toolkit & Resource Guide"
+title: "08: Analyst Toolkit and Resource Guide"
+nav_order: 9
 ---
 
 ### A Curated List for Continuous Learning
