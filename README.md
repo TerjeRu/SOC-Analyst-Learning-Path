@@ -1,3 +1,6 @@
+# A Practical Learning Path for Security Analysts
+
+
 This repository contains a curated, focused learning path for IT professionals moving into a security operations role. The guides are designed to build practical, hands-on skills, moving from core concepts to the day-to-day workflow of a defensive security analyst.
 
 ---
